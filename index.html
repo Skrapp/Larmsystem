@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <title>Larmcentral Nilsson</title>
+</head>
+<body>
+    <header>
+        <div class="flex-container">
+            <img src="logo.png" alt="Larmcentral Nilsson Logo" class="logo-img">
+        </div>
+    </header>
+    <main>
+        <section id="logs-section">
+            <button id="logs-btn">
+                <i class="bi bi-file-earmark-text"></i>
+                Visa logg(0)
+            </button>
+        </section>
+        <section id="active-status-section">
+            <div>
+                <button class="active-status-btn" id="trespassing-btn">
+                    <i class="bi bi-unlock2 bi-lock"></i>
+                    Inbrottslarm ej aktiverat
+                </button>
+                <button class="set-active-btn">Aktivera</button>
+            </div>
+                <div>
+                <button class="active-status-btn" id="fire-btn">
+                    <i class="bi bi-fire bi-slash-circle"></i>
+                    Brandlarm ej aktiverat
+                </button>
+                <button class="set-active-btn">Aktivera</button>
+            </div>
+        </section>
+        <section id="alarm-trigger-section">
+            <h2>Aktivera larm manuellt</h2>
+            <button class="alarm-trigger-btn" id="trespassing-trigger-btn">
+                <i class="bi bi-person-exclamation"></i>
+                Utlös inbrottslarm
+            </button>
+            <button class="alarm-trigger-btn" id="fire-trigger-btn">
+                <i class="bi bi-fire"></i>
+                Utlös brandlarm
+            </button>
+            <button class="alarm-trigger-btn" id="all-trigger-btn">
+                <i class="bi bi-exclamation-circle"></i>
+                Utlös alla larm
+            </button>
+        </section>
+    </main>
+</body>
+</html>
