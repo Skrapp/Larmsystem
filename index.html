@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <title>Larmcentral Nilsson</title>
+    <link rel="stylesheet" href="style.css">
+    <title>Wigell security</title>
 </head>
 <body>
     <header>
-        <div class="flex-container">
-            <img src="logo.png" alt="Larmcentral Nilsson Logo" class="logo-img">
+        <div>
+            <img src="imgs/logo wigell security.png" alt="Logga för Wigell Security" class="logo-img">
         </div>
     </header>
     <main>
@@ -20,19 +21,19 @@
             </button>
         </section>
         <section id="active-status-section">
-            <div>
+            <div id="trespassing-status-container" data-status="inactive">
                 <button class="active-status-btn" id="trespassing-btn">
                     <i class="bi bi-unlock2 bi-lock"></i>
                     Inbrottslarm ej aktiverat
                 </button>
                 <button class="set-active-btn">Aktivera</button>
             </div>
-                <div>
+            <div id="fire-status-container" data-status="active">
                 <button class="active-status-btn" id="fire-btn">
                     <i class="bi bi-fire bi-slash-circle"></i>
-                    Brandlarm ej aktiverat
+                    Brandlarm aktiverat
                 </button>
-                <button class="set-active-btn">Aktivera</button>
+                <button class="set-active-btn">Avaktivera</button>
             </div>
         </section>
         <section id="alarm-trigger-section">
@@ -51,5 +52,6 @@
             </button>
         </section>
     </main>
+    <script src="script.js"></script>
 </body>
 </html>
