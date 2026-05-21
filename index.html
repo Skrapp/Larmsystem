@@ -21,9 +21,9 @@
                 Visa logg(0)
             </button>
         </section>
-        <section id="active-status-section">
-            <div class="active-status-container" id="trespassing-status-container" data-status="inactive">
-                <button class="active-status-btn" id="trespassing-btn">
+        <section id="alarm-control-section">
+            <div class="alarm-control-container" id="trespassing-status-container" data-status="inactive" data-alarm-type="trespassing">
+                <button class="alarm-status-btn" id="trespassing-btn">
                     <i class="bi bi-unlock2 bi-lock"></i>
                     <span class="status-text">
                         Ej aktiverat
@@ -31,8 +31,8 @@
                 </button>
                 <button class="set-active-btn">Aktivera</button>
             </div>
-            <div class="active-status-container" id="fire-status-container" data-status="active">
-                <button class="active-status-btn" id="fire-btn">
+            <div class="alarm-control-container" id="fire-status-container" data-status="active" data-alarm-type="fire">
+                <button class="alarm-status-btn" id="fire-btn">
                     <i class="bi bi-fire bi-slash-circle"></i>
                     <span class= "status-text">
                         Aktiverat

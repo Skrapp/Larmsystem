@@ -1,49 +1,80 @@
 // Funktion för att ändra styling när man aktiverar/avaktiverar ett larm
-function toggleAlarmStatus(alarmStatusContainer){
-    const currentStatus = alarmStatusContainer.dataset.status;
-    const statusBtnText = alarmStatusContainer.querySelector(".active-status-btn .status-text");
-    const toggleBtn = alarmStatusContainer.querySelector(".set-active-btn");
+function toggleAlarmSystemStatus(alarmControlContainer){
+    const currentStatus = alarmControlContainer.dataset.status;
+    const alarmTypeSwe = getSwedishAlarmInfo(alarmControlContainer.dataset.alarmType);
+    const statusBtnText = alarmControlContainer.querySelector(".alarm-status-btn .status-text");
+    const toggleBtn = alarmControlContainer.querySelector(".set-active-btn");
 
-    
     if(currentStatus === 'inactive'){
-        alarmStatusContainer.dataset.status = 'active';
+        console.log(`Aktiverar ${alarmTypeSwe.toLowerCase()}`);
+        alarmControlContainer.dataset.status = 'active';
         statusBtnText.innerText = "Aktiverat";
-        toggleBtn.innerText = "Stäng av larm"
+        toggleBtn.innerText = `Stäng av ${alarmTypeSwe.toLowerCase()}`;
     }
     else{
-        alarmStatusContainer.dataset.status = 'inactive';
+        console.log(`Avaktiverar ${alarmTypeSwe.toLowerCase()}`);
+        alarmControlContainer.dataset.status = 'inactive';
         statusBtnText.innerText = 'Ej aktiverat';
-        toggleBtn.innerText = 'Aktivera larm';
+        toggleBtn.innerText = `Aktivera ${alarmTypeSwe.toLowerCase()}`;
     }
 }
 
-function deactivateAlarm(alarmType){
-    console.log(`Försöker stänga av ${alarmType}...`);
-    //logga
-    //pinkod
-    //ta bort alla element kopplade till alarmType i alarm-info-section
-    //Om alla larm är avstängda, ta bort hela alarm-info-section
-    //Lägg till ett konfirmationsmeddelande att larmet är avstängt (försvinner efter 5 s)
+function getSwedishAlarmInfo(alarmType){
+    switch(alarmType){
+        case "trespassing":
+            return "Inbrottslarm";
+        case "fire":
+            return "Brandlarm";
+        default:
+            console.warn("Okänt larmtyp:", alarmType);
+    }
+    return "Larm";
+}
 
+function deactivateAlarm(alarmType){
+    const alarmInfoSwe = getSwedishAlarmInfo(alarmType);
+    //logga
+    console.log(`Försöker stänga av ${alarmInfoSwe.toLowerCase()}...`);
+
+    //pinkod
+
+    console.log(`${alarmInfoSwe} avstängt!`); //För testning, ta bort när pinkod är implementerad
+
+    //ta bort alla element kopplade till alarmType i alarm-info-section
+    const alarmInfoSection = document.getElementById('alarm-info-section');
+    if(!alarmInfoSection){
+        console.warn("Det finns ingen alarm-info-section att uppdatera.");
+        return;
+    }
+    
+    const infoToRemove = alarmInfoSection.querySelector(`p[data-alarm-type="${alarmType}"]`);
+    const btnToRemove = alarmInfoSection.querySelector(`button[data-alarm-type="${alarmType}"]`);
+
+    if(infoToRemove) infoToRemove.remove();
+    if(btnToRemove) btnToRemove.remove();
+
+    //Om alla larm är avstängda, ta bort hela alarm-info-section
+    if(!alarmInfoSection.querySelector('.deactivate-alarm-btn')) {
+        alarmInfoSection.remove();
+    }
+    //Lägg till ett konfirmationsmeddelande att larmet är avstängt (försvinner efter 5 s)
+    const confirmationMsg = document.createElement('p');
+    confirmationMsg.innerText = `${alarmInfoSwe} är avstängt.`;
+    const mainElement = document.querySelector('main');
+    mainElement.insertBefore(confirmationMsg, mainElement.firstChild);
+
+    setTimeout(() => {
+        confirmationMsg.remove();
+    }, 5000);
 }
 
 //Funktion för att trigga ett alarm att utlösas, skapar en 
 function triggerAlarm(alarmType){
-    let alarmInfoSwe = "";
-    switch(alarmType){
-        case "trespassing":
-            console.log("Inbrottslarm utlöst!");
-            alarmInfoSwe = "Inbrottslarm";
-            break;
-        case "fire":
-            console.log("Brandlarm utlöst!");
-            alarmInfoSwe = "Brandlarm";
-            break;
-        default:
-            console.warn("Okänt larmtyp:", alarmType);
-    }
     //Logga
-    
+    const alarmInfoSwe = getSwedishAlarmInfo(alarmType);
+    console.log(`Larm utlöst: ${alarmInfoSwe}`);
+
+    // Informera om larmet
     let alarmInfoSection = document.getElementById('alarm-info-section');
     if(!alarmInfoSection){
         //Om section inte finns, skapa den
@@ -88,8 +119,8 @@ function triggerAlarm(alarmType){
 }
 
 //Event listeners för att aktiverea/avaktivera larmstatus
-const activeStatusContainers = document.querySelectorAll(".active-status-container");
-activeStatusContainers.forEach(c => {
+const alarmControlContainers = document.querySelectorAll(".alarm-control-container");
+alarmControlContainers.forEach(c => {
     const toggleBtn = c.querySelector(".set-active-btn");
 
     if(!toggleBtn){
@@ -98,7 +129,7 @@ activeStatusContainers.forEach(c => {
     }
     
     toggleBtn.addEventListener('click', () => 
-        toggleAlarmStatus(c)
+        toggleAlarmSystemStatus(c)
     );
 })
 
