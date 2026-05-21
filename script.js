@@ -1,3 +1,12 @@
+function logEvent(type, message){
+    const timestamp = new Date().toLocaleString();
+    console.log(`[${timestamp}] [${type.toUpperCase()}] ${message}`);
+
+    const logs = JSON.parse(localStorage.getItem('eventLogs')) || [];
+    logs.push({ timestamp, type, message });
+    localStorage.setItem('eventLogs', JSON.stringify(logs));
+}
+
 // Funktion för att ändra styling när man aktiverar/avaktiverar ett larm
 function toggleAlarmSystemStatus(alarmControlContainer){
     const currentStatus = alarmControlContainer.dataset.status;
@@ -6,13 +15,13 @@ function toggleAlarmSystemStatus(alarmControlContainer){
     const toggleBtn = alarmControlContainer.querySelector(".set-active-btn");
 
     if(currentStatus === 'inactive'){
-        console.log(`Aktiverar ${alarmTypeSwe.toLowerCase()}`);
+        logEvent('info', `Aktiverar ${alarmTypeSwe.toLowerCase()}`);
         alarmControlContainer.dataset.status = 'active';
         statusBtnText.innerText = "Aktiverat";
         toggleBtn.innerText = `Stäng av ${alarmTypeSwe.toLowerCase()}`;
     }
     else{
-        console.log(`Avaktiverar ${alarmTypeSwe.toLowerCase()}`);
+        logEvent('info', `Avaktiverar ${alarmTypeSwe.toLowerCase()}`);
         alarmControlContainer.dataset.status = 'inactive';
         statusBtnText.innerText = 'Ej aktiverat';
         toggleBtn.innerText = `Aktivera ${alarmTypeSwe.toLowerCase()}`;
@@ -26,7 +35,7 @@ function getSwedishAlarmInfo(alarmType){
         case "fire":
             return "Brandlarm";
         default:
-            console.warn("Okänt larmtyp:", alarmType);
+            logEvent('warn', `Okänt larmtyp: ${alarmType}`);
     }
     return "Larm";
 }
@@ -34,16 +43,16 @@ function getSwedishAlarmInfo(alarmType){
 function deactivateAlarm(alarmType){
     const alarmInfoSwe = getSwedishAlarmInfo(alarmType);
     //logga
-    console.log(`Försöker stänga av ${alarmInfoSwe.toLowerCase()}...`);
+    logEvent('info', `Försöker stänga av ${alarmInfoSwe.toLowerCase()}...`);
 
     //pinkod
 
-    console.log(`${alarmInfoSwe} avstängt!`); //För testning, ta bort när pinkod är implementerad
+    logEvent('info', `${alarmInfoSwe} avstängt!`);
 
     //ta bort alla element kopplade till alarmType i alarm-info-section
     const alarmInfoSection = document.getElementById('alarm-info-section');
     if(!alarmInfoSection){
-        console.warn("Det finns ingen alarm-info-section att uppdatera.");
+        logEvent('warn', "Det finns ingen alarm-info-section att uppdatera.");
         return;
     }
     
@@ -58,6 +67,7 @@ function deactivateAlarm(alarmType){
         alarmInfoSection.remove();
     }
     //Lägg till ett konfirmationsmeddelande att larmet är avstängt (försvinner efter 5 s)
+    //TODO gör den snyggare?
     const confirmationMsg = document.createElement('p');
     confirmationMsg.innerText = `${alarmInfoSwe} är avstängt.`;
     const mainElement = document.querySelector('main');
@@ -72,7 +82,7 @@ function deactivateAlarm(alarmType){
 function triggerAlarm(alarmType){
     //Logga
     const alarmInfoSwe = getSwedishAlarmInfo(alarmType);
-    console.log(`Larm utlöst: ${alarmInfoSwe}`);
+    logEvent('info', `Larm utlöst: ${alarmInfoSwe}`);
 
     // Informera om larmet
     let alarmInfoSection = document.getElementById('alarm-info-section');
@@ -124,7 +134,7 @@ alarmControlContainers.forEach(c => {
     const toggleBtn = c.querySelector(".set-active-btn");
 
     if(!toggleBtn){
-        console.error("Det finns ingen toggle-knapp i container:", c);
+        logEvent('error', `Det finns ingen toggle-knapp i container: ${c}`);
         return;
     }
     
