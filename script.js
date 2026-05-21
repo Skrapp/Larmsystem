@@ -8,10 +8,17 @@ function logEvent(type, message){
 }
 
 // Funktion för att ändra styling när man aktiverar/avaktiverar ett larm
-function toggleAlarmSystemStatus(alarmControlContainer){
+function toggleAlarmSystemStatus(alarmType){
+    const alarmControlContainer = document.querySelector(`.alarm-control-container[data-alarm-type="${alarmType}"]`);
+    if(!alarmControlContainer){
+        logEvent('error', `Hittar ingen larmcontainer för alarmType: ${alarmType}`);
+        return;
+    }
+
     const currentStatus = alarmControlContainer.dataset.status;
-    const alarmTypeSwe = getSwedishAlarmInfo(alarmControlContainer.dataset.alarmType);
+    const alarmTypeSwe = getSwedishAlarmInfo(alarmType);
     const statusBtnText = alarmControlContainer.querySelector(".alarm-status-btn .status-text");
+    const statusIcon = alarmControlContainer.querySelector(".alarm-status-btn i");
     const toggleBtn = alarmControlContainer.querySelector(".set-active-btn");
 
     if(currentStatus === 'inactive'){
@@ -19,12 +26,20 @@ function toggleAlarmSystemStatus(alarmControlContainer){
         alarmControlContainer.dataset.status = 'active';
         statusBtnText.innerText = "Aktiverat";
         toggleBtn.innerText = `Stäng av ${alarmTypeSwe.toLowerCase()}`;
+        if(alarmType === 'trespassing' && statusIcon){
+            statusIcon.classList.remove('bi-unlock2');
+            statusIcon.classList.add('bi-lock');
+        }
     }
     else{
         logEvent('info', `Avaktiverar ${alarmTypeSwe.toLowerCase()}`);
         alarmControlContainer.dataset.status = 'inactive';
         statusBtnText.innerText = 'Ej aktiverat';
         toggleBtn.innerText = `Aktivera ${alarmTypeSwe.toLowerCase()}`;
+        if(alarmType === 'trespassing' && statusIcon){
+            statusIcon.classList.remove('bi-lock');
+            statusIcon.classList.add('bi-unlock2');
+        }
     }
 }
 
@@ -128,10 +143,29 @@ function triggerAlarm(alarmType){
     alarmInfoSection.scrollIntoView({ behavior: "smooth" });
 }
 
+function showLogs(){
+    const logsContainer = document.querySelector('#logs-container');
+    const logsList = document.querySelector('#logs-list');
+    const logs = JSON.parse(localStorage.getItem('eventLogs')) || [];
+    
+    logsList.innerHTML = '';
+    
+    //TODO style logsContainer och alla element inne i
+    //TODO kunna stänga logsContainer
+    logs.forEach(log => {
+        console.log(log);
+        const li = document.createElement('li');
+        li.textContent = `[${log.timestamp}] [${log.type.toUpperCase()}] ${log.message}`;
+        logsList.appendChild(li);
+    })
+    logsContainer.hidden = false;
+}
+
 //Event listeners för att aktiverea/avaktivera larmstatus
 const alarmControlContainers = document.querySelectorAll(".alarm-control-container");
 alarmControlContainers.forEach(c => {
     const toggleBtn = c.querySelector(".set-active-btn");
+    const alarmType = c.dataset.alarmType;
 
     if(!toggleBtn){
         logEvent('error', `Det finns ingen toggle-knapp i container: ${c}`);
@@ -139,16 +173,26 @@ alarmControlContainers.forEach(c => {
     }
     
     toggleBtn.addEventListener('click', () => 
-        toggleAlarmSystemStatus(c)
+        toggleAlarmSystemStatus(alarmType)
     );
 })
 
 //Event listeners för att trigga larm
 const triggerBtns = document.querySelectorAll(".alarm-trigger-btn");
 triggerBtns.forEach(btn => {
+    const alarmType = btn.dataset.alarmType;
+    if(alarmType === 'all'){
+        btn.addEventListener('click', () => {
+            triggerAlarm('fire');
+            triggerAlarm('trespassing');
+        })
+        return;
+    }
     btn.addEventListener('click', () => {
-        const alarmType = btn.dataset.alarmType;
         //pinkod
         triggerAlarm(alarmType);
     });
 });
+
+const logsBtn = document.querySelector('#logs-btn');
+logsBtn.addEventListener('click', showLogs);

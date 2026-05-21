@@ -18,13 +18,19 @@
         <section id="logs-section">
             <button id="logs-btn">
                 <i class="bi bi-file-earmark-text"></i>
-                Visa logg(0)
+                Visa logg
             </button>
+            <div id="logs-container" hidden>
+                <button id="close-logs-btn"><i class="bi bi-x-lg"></i></button>
+
+                <ul id="logs-list">
+                </ul>
+            </div>
         </section>
         <section id="alarm-control-section">
             <div class="alarm-control-container" id="trespassing-status-container" data-status="inactive" data-alarm-type="trespassing">
                 <button class="alarm-status-btn" id="trespassing-btn">
-                    <i class="bi bi-unlock2 bi-lock"></i>
+                    <i class="bi bi-unlock2"></i>
                     <span class="status-text">
                         Ej aktiverat
                     </span>
