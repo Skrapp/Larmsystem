@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="imgs/favicon.ico" type="image/x-icon">
     <title>Wigell security</title>
 </head>
 <body>
@@ -24,14 +25,18 @@
             <div id="trespassing-status-container" data-status="inactive">
                 <button class="active-status-btn" id="trespassing-btn">
                     <i class="bi bi-unlock2 bi-lock"></i>
-                    Inbrottslarm ej aktiverat
+                    <span class="status-text">
+                        Ej aktiverat
+                    </span>
                 </button>
                 <button class="set-active-btn">Aktivera</button>
             </div>
             <div id="fire-status-container" data-status="active">
                 <button class="active-status-btn" id="fire-btn">
                     <i class="bi bi-fire bi-slash-circle"></i>
-                    Brandlarm aktiverat
+                    <span class= "status-text">
+                        Aktiverat
+                    </span>
                 </button>
                 <button class="set-active-btn">Avaktivera</button>
             </div>
