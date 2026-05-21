@@ -1,17 +1,4 @@
-const trespassingStatusContainer = document.querySelector("#trespassing-status-container");
-const toggleTrespassingBtn = trespassingStatusContainer.querySelector(".set-active-btn");
-const fireStatusContainer = document.querySelector("#fire-status-container");
-const toggleFireBtn = fireStatusContainer.querySelector(".set-active-btn");
-
-
-//TODO make it a for loop, make a class of status-container, get a list of em, for each element set up event listener on button
-toggleTrespassingBtn.addEventListener('click', () => 
-    toggleAlarmStatus(trespassingStatusContainer)
-);
-
-toggleFireBtn.addEventListener('click', () => 
-toggleAlarmStatus(fireStatusContainer)
-);
+const activeStatusContainers = document.querySelectorAll(".active-status-container");
 
 function toggleAlarmStatus(alarmStatusContainer){
     const currentStatus = alarmStatusContainer.dataset.status;
@@ -30,3 +17,10 @@ function toggleAlarmStatus(alarmStatusContainer){
         toggleBtn.innerText = 'Aktivera larm';
     }
 }
+
+activeStatusContainers.forEach(c => {
+    const toggleBtn = c.querySelector(".set-active-btn");
+    toggleBtn.addEventListener('click', () => 
+        toggleAlarmStatus(c)
+);
+})

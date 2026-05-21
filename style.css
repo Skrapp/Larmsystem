@@ -98,7 +98,7 @@ button:hover {
     flex-wrap: wrap;
 }
 
-#active-status-section > div {
+.active-status-container {
     flex: 1 1 100px;
 
     display: flex;
@@ -112,8 +112,6 @@ button:hover {
     border: solid 4px var(--border);
     border-radius: 50%;
 
-    flex-direction: column;
-    gap: 0.5rem;
     padding: 1rem;
     line-height: 1.3;
 
@@ -128,19 +126,19 @@ button:hover {
     display: block;
 }
 
-#active-status-section > div[data-status="inactive"] .active-status-btn {
+.active-status-container[data-status="inactive"] .active-status-btn {
     background-color: var(--status-inactive-color);
 }
 
-#active-status-section > div[data-status="inactive"] .active-status-btn:hover {
+.active-status-container[data-status="inactive"] .active-status-btn:hover {
     background-color: var(--button-hover-bg-color);
 }
 
-#active-status-section > div[data-status="active"] .active-status-btn {
+.active-status-container[data-status="active"] .active-status-btn {
     background-color: var(--status-active-color);
 }
 
-#active-status-section > div[data-status="active"] .active-status-btn:hover {
+.active-status-container[data-status="active"] .active-status-btn:hover {
     background-color: var(--status-active-color-hover);
 }
 
@@ -148,11 +146,11 @@ button:hover {
     background-color: var(--set-status-btn-color);
 }
 
-#active-status-section > div[data-status="active"] .set-active-btn {
+.active-status-container[data-status="active"] .set-active-btn {
     background-color: var(--disable-btn-color);
 }
 
-#active-status-section > div[data-status="active"] .set-active-btn:hover {
+.active-status-container[data-status="active"] .set-active-btn:hover {
     background-color: var(--disable-btn-color-hover);
 }
 
