@@ -2,7 +2,7 @@
     --bg-color: #080a0c;
     --section: #191f25;
     --section-border: #49465c;
-    --border: #8A95A5;
+    --border-color: #ffffff40;
     --button-bg-color: #32314a;
     --button-hover-bg-color: #494864;
     --status-inactive-color: #605958;
@@ -11,8 +11,9 @@
     --set-status-btn-color: #1f2f54;
     --text-color-light: #C4C9D4;
     --text-color-strong: #E4E7F0;
-    --disable-btn-color:#a01a1a;
-    --disable-btn-color-hover:#bc3434;
+    --warning-color:#a01a1a;
+    --warning-btn-color-hover:#bc3434;
+    --warning-color-lighter:#bc3434;
 }
 
 *,
@@ -79,7 +80,7 @@ button {
     color: var(--text-color-light);
     text-align: center;
 
-    border: 1px solid #ffffff20;
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 1rem 1.2rem;
     cursor: pointer;
@@ -109,7 +110,7 @@ button:hover {
 }
 
 .active-status-btn {
-    border: solid 4px var(--border);
+    border-width: 4px;
     border-radius: 50%;
 
     padding: 1rem;
@@ -147,16 +148,22 @@ button:hover {
 }
 
 .active-status-container[data-status="active"] .set-active-btn {
-    background-color: var(--disable-btn-color);
+    background-color: var(--warning-color);
 }
 
 .active-status-container[data-status="active"] .set-active-btn:hover {
-    background-color: var(--disable-btn-color-hover);
+    background-color: var(--warning-btn-color-hover);
+}
+
+h1 {
+    font-size: 2rem;
+    color: var(--text-color-strong);
 }
 
 h2 {
     font-size: 1.6rem;
     color: var(--text-color-strong);
+    margin:0;
 }
 
 #alarm-trigger-section {
@@ -175,4 +182,29 @@ h2 {
 
 .alarm-trigger-btn i {
     font-size: 2rem;
+}
+
+#alarm-info-section{
+    background-color: var(--warning-color);
+    animation: pulse 1s infinite;
+}
+
+.deactivate-alarm-btn-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    gap: 1vw;
+}
+
+.deactivate-alarm-btn-container > *{
+    flex: 1 1 150px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    background-color: var(--warning-color);
+  }
+  50% {
+    background-color: var(--warning-color-lighter);
+  }
 }
