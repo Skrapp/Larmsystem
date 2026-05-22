@@ -143,22 +143,23 @@ function triggerAlarm(alarmType){
     alarmInfoSection.scrollIntoView({ behavior: "smooth" });
 }
 
+// Funktion för att visa loggar
 function showLogs(){
     const logsContainer = document.querySelector('#logs-container');
     const logsList = document.querySelector('#logs-list');
+    const logsBtn = document.querySelector('#logs-btn');
     const logs = JSON.parse(localStorage.getItem('eventLogs')) || [];
     
     logsList.innerHTML = '';
     
     //TODO style logsContainer och alla element inne i
-    //TODO kunna stänga logsContainer
     logs.forEach(log => {
-        console.log(log);
-        const li = document.createElement('li');
-        li.textContent = `[${log.timestamp}] [${log.type.toUpperCase()}] ${log.message}`;
-        logsList.appendChild(li);
-    })
+        const logElement = document.createElement('li');
+        logElement.textContent = `[${log.timestamp}] [${log.type.toUpperCase()}] ${log.message}`;
+        logsList.appendChild(logElement);
+    });
     logsContainer.hidden = false;
+    logsBtn.textContent = 'Uppdatera loggar';
 }
 
 //Event listeners för att aktiverea/avaktivera larmstatus
@@ -196,3 +197,12 @@ triggerBtns.forEach(btn => {
 
 const logsBtn = document.querySelector('#logs-btn');
 logsBtn.addEventListener('click', showLogs);
+
+const closeLogsBtn = document.querySelector('#close-logs-btn');
+closeLogsBtn.addEventListener('click', () => {
+    const logsContainer = document.querySelector('#logs-container');
+    const logsBtn = document.querySelector('#logs-btn');
+
+    logsContainer.hidden = true;
+    logsBtn.textContent = 'Visa loggar';
+})

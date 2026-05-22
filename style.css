@@ -4,7 +4,9 @@
     --section-border: #49465c;
     --border-color: #ffffff40;
     --button-bg-color: #32314a;
+    --button-bg-color-transparent: #32314a50;
     --button-hover-bg-color: #494864;
+    --button-hover-bg-color-transparent: #49486450;
     --status-inactive-color: #605958;
     --status-active-color: #3f8e36;
     --status-active-color-hover: #54a04b;
@@ -20,6 +22,11 @@
 *::before,
 *::after {
     box-sizing: border-box;
+}
+
+/* Om ett element ska gömmas så ska det gömmas oberoende av andra display-egenskaper */
+*[hidden] {
+    display: none !important;
 }
 
 body {
@@ -93,8 +100,8 @@ button:hover {
 }
 
 #alarm-control-section {
-    gap: 1rem;
     display: flex;
+    gap: 1rem;
 
     flex-wrap: wrap;
 }
@@ -207,4 +214,53 @@ h2 {
   50% {
     background-color: var(--warning-color-lighter);
   }
+}
+
+#logs-section {
+    display: flex;
+    flex-flow: column wrap;
+    gap: 2vh;
+}
+
+#logs-container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--section-border);
+    border-radius: 16px;
+    padding: 1rem;
+    max-height: 50vh;
+    overflow-y: scroll;
+}
+
+#close-logs-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+    width: auto;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    min-width: 48px;
+    min-height: 48px;
+
+    margin-left: auto;
+    position: sticky;
+    top: 0;
+
+    background-color: var(--button-bg-color-transparent);
+    font-size: 1.2rem;
+}
+
+#close-logs-btn:hover {
+    background-color: var(--button-hover-bg-color-transparent);
+}
+
+#logs-list {
+    text-align: left;
+    font-size: small;
+}
+
+#logs-list li {
+    margin-bottom: 0.5rem;
 }
