@@ -7,16 +7,105 @@ function logEvent(type, message){
     localStorage.setItem('eventLogs', JSON.stringify(logs));
 }
 
+const pinCodeDisplay = document.querySelector('#pin-code-display');
+const keys = document.querySelectorAll('.key');
+const clearBtn = document.querySelector('.clear-btn');
+const submitBtn = document.querySelector('.submit-btn');
+let pin = '';
+
+keys.forEach(key => {
+    key.addEventListener('click', () => {
+        pin += key.textContent;
+        updateDisplay();
+    });
+
+});
+
+clearBtn.addEventListener('click', () => {
+    pin = '';
+
+    updateDisplay();
+
+});
+
+function updateDisplay() {
+
+    pinCodeDisplay.textContent =
+        '*'.repeat(pin.length);
+
+}
+
+// Funktion för att prompta användaren att trycka in pinkod
+function promptForPinCode(reason){
+    return new Promise((resolve) => {
+        const correctPin = 1234;
+        let attempts = 0;
+        const maxAttempts = 3;
+        pin = '';
+
+        updateDisplay();
+
+        const instruction = document.getElementById('pin-code-instruction');
+        instruction.innerText = `Tryck in pinkod för att ${reason}, avsluta med "*"`
+
+        const pinCodeOverlay = document.getElementById('pin-code-overlay');
+        pinCodeOverlay.style.display = 'flex';
+        
+        const handleSubmit = () => {
+            const isCorrect = parseInt(pin) === correctPin;
+            attempts++;
+            
+            if(isCorrect){
+                pinCodeOverlay.style.display = 'none';
+                submitBtn.removeEventListener('click', handleSubmit);
+                resolve(isCorrect);
+                return;
+            }
+            
+            if(attempts < maxAttempts){
+                logEvent('warn', `PIN-kod fel. Försök ${attempts}.`);
+                pin = '';
+                updateDisplay();
+                instruction.innerText = 
+                    `PIN-kod fel. Försök igen (${maxAttempts - attempts} försök kvar)`;
+            } else {
+                logEvent('error', `PIN-kod fel ${maxAttempts} gånger i följd - åtkomst nekad`);
+                instruction.innerText = `PIN-kod fel för många gånger. Åtkomst nekad.`;
+                
+                //Här skulle en riktig lock-out vara
+                setTimeout(() => {
+                    pinCodeOverlay.style.display = 'none';
+                    submitBtn.removeEventListener('click', handleSubmit);
+                    resolve(false);
+                }, 10000);
+            }
+        };
+        
+        submitBtn.addEventListener('click', handleSubmit);
+    });
+}
+
+
+
 // Funktion för att ändra styling när man aktiverar/avaktiverar ett larm
-function toggleAlarmSystemStatus(alarmType){
+async function toggleAlarmSystemStatus(alarmType){
     const alarmControlContainer = document.querySelector(`.alarm-control-container[data-alarm-type="${alarmType}"]`);
     if(!alarmControlContainer){
         logEvent('error', `Hittar ingen larmcontainer för alarmType: ${alarmType}`);
         return;
     }
 
-    const currentStatus = alarmControlContainer.dataset.status;
     const alarmTypeSwe = getSwedishAlarmInfo(alarmType);
+
+    //inväntar svar av pinkod
+    const isPinCorrect = await promptForPinCode(`ändra status på ${alarmTypeSwe.toLowerCase()}`);
+    if(!isPinCorrect){
+        logEvent('warn', `PIN-kod fel vid ${alarmTypeSwe.toLowerCase()}`);
+        
+        return;
+    }
+
+    const currentStatus = alarmControlContainer.dataset.status;
     const statusBtnText = alarmControlContainer.querySelector(".alarm-status-btn .status-text");
     const statusIcon = alarmControlContainer.querySelector(".alarm-status-btn i");
     const toggleBtn = alarmControlContainer.querySelector(".set-active-btn");
@@ -55,14 +144,21 @@ function getSwedishAlarmInfo(alarmType){
     return "Larm";
 }
 
-function deactivateAlarm(alarmType){
-    const alarmInfoSwe = getSwedishAlarmInfo(alarmType);
+async function deactivateAlarm(alarmType){
+    const alarmTypeSwe = getSwedishAlarmInfo(alarmType);
     //logga
-    logEvent('info', `Försöker stänga av ${alarmInfoSwe.toLowerCase()}...`);
+    logEvent('info', `Försöker stänga av ${alarmTypeSwe.toLowerCase()}...`);
 
-    //pinkod
+    //inväntar svar av pinkod
+    const isPinCorrect = await promptForPinCode(`stäng av ${alarmTypeSwe.toLowerCase()}`);
+    if(!isPinCorrect){
+        logEvent('warn', `PIN-kod fel vid avstängning av ${alarmTypeSwe.toLowerCase()}`);
+        
+        return;
+    }
 
-    logEvent('info', `${alarmInfoSwe} avstängt!`);
+    //Här ska det skickas anrop till server att stänga av 
+    logEvent('info', `${alarmTypeSwe} avstängt!`);
 
     //ta bort alla element kopplade till alarmType i alarm-info-section
     const alarmInfoSection = document.getElementById('alarm-info-section');
@@ -84,7 +180,7 @@ function deactivateAlarm(alarmType){
     //Lägg till ett konfirmationsmeddelande att larmet är avstängt (försvinner efter 5 s)
     //TODO gör den snyggare?
     const confirmationMsg = document.createElement('p');
-    confirmationMsg.innerText = `${alarmInfoSwe} är avstängt.`;
+    confirmationMsg.innerText = `${alarmTypeSwe} är avstängt.`;
     const mainElement = document.querySelector('main');
     mainElement.insertBefore(confirmationMsg, mainElement.firstChild);
 
